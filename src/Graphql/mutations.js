@@ -35,3 +35,16 @@ export const INSERT_FOLLOWER_ONE = gql`
     }
   }
 `;
+
+export const DELETE_FOLLOWER_ONE = gql`
+  mutation delete_followers($followed_by: uuid, $follow_to: uuid) {
+    delete_followers(
+      where: {
+        followed_by: { _eq: $followed_by }
+        follow_to: { _eq: $follow_to }
+      }
+    ) {
+      affected_rows
+    }
+  }
+`;

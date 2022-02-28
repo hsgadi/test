@@ -8,7 +8,7 @@ import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
 import { history } from "../Router/browserHistory";
 
-const { REACT_APP_GQL_URL } = process.env;
+const { REACT_APP_GQL_URL, REACT_APP_GQL_ACCESS_KEY } = process.env;
 
 const cache = new InMemoryCache();
 
@@ -83,28 +83,19 @@ const authLink = new ApolloLink((operation, forward) => {
 const httpLink = new createHttpLink({
   uri: "https://" + REACT_APP_GQL_URL,
   headers: {
-    "x-hasura-admin-secret": "IqJoK3m6XP3i1orwH6Wz4KLd6LFVn/BAQQ==",
+    "x-hasura-admin-secret": REACT_APP_GQL_ACCESS_KEY,
   },
 });
 
 const wsLink = new WebSocketLink({
   uri: "wss://" + REACT_APP_GQL_URL,
-  headers: {
-    "x-hasura-admin-secret": "IqJoK3m6XP3i1orwH6Wz4KLd6LFVn/BAQQ==",
-  },
   options: {
     reconnect: true,
     lazy: true,
-    connectionParams: () => {
-      if (localStorage.getItem("access_token")) {
-        return {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        };
-      } else {
-        return {};
-      }
+    connectionParams: {
+      headers: {
+        "x-hasura-admin-secret": REACT_APP_GQL_ACCESS_KEY,
+      },
     },
   },
 });

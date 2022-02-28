@@ -24,6 +24,7 @@ const Login = () => {
   const loginSubmitHandler = (e) => {
     try {
       setLoading(true);
+      localStorage.clear();
       const user = users.find((user) => user.email === e.email);
       if (user) {
         localStorage.setItem("user_id", user.id);

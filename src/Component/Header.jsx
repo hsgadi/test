@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useSubscription } from "@apollo/client";
 import { Button } from "antd";
 import React from "react";
 import { GET_USER_DETAILS_BY_ID } from "../Graphql/query";
@@ -7,7 +7,7 @@ import { history } from "../Utils/Router/browserHistory";
 const Header = () => {
   const user_id = localStorage.getItem("user_id");
 
-  const { data: userData } = useQuery(GET_USER_DETAILS_BY_ID, {
+  const { data: userData } = useSubscription(GET_USER_DETAILS_BY_ID, {
     variables: {
       id: user_id,
     },
@@ -27,7 +27,7 @@ const Header = () => {
               <div class="col-lg-6 col-12">
                 <div class="welcome-msg d-flex">
                   <p style={{ marginRight: "10px" }}>
-                    Welcome to {""}
+                    Welcome {""}
                     <strong>{userData?.user_by_pk?.name}</strong>{" "}
                   </p>
                   <Button

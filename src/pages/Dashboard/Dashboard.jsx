@@ -1,11 +1,13 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Button, Card, Input, Spin } from "antd";
+import { useMutation, useSubscription } from "@apollo/client";
+import { Button, Card, Input, Row, Spin } from "antd";
 import React, { useState } from "react";
 import Header from "../../Component/Header";
 import { TweetCard } from "../../Component/TweetCard";
 import { INSERT_TWEET_ONE } from "../../Graphql/mutations";
-import { GET_ALL_TWEETS } from "../../Graphql/query";
+import { GET_ALL_TWEETS } from "../../Graphql/subscription";
 import "./Dashboard.css";
+
+const { TextArea } = Input;
 
 export const Dashboard = () => {
   const user_id = localStorage.getItem("user_id");
@@ -13,7 +15,7 @@ export const Dashboard = () => {
   const [description, setDescription] = useState("");
 
   const { data: tweetData, loading: tweetDataloading } =
-    useQuery(GET_ALL_TWEETS);
+    useSubscription(GET_ALL_TWEETS);
 
   const [INSERT_TWEET_ONE_MUTATION] = useMutation(INSERT_TWEET_ONE);
 
@@ -38,19 +40,27 @@ export const Dashboard = () => {
         <div className="container">
           <div className="pagetitle">Feeds</div>
           <Card>
-            <div className="d-flex">
-              <Input
+            <Row className="d-flex">
+              <TextArea
+                style={{ width: "100%", height: "100%" }}
+                size="large"
+                showCount
+                maxLength={140}
                 value={description}
                 name="tweet"
-                placeholder="Tweet"
+                placeholder="Tweet (max 140 characters)"
                 onChange={(e) => setDescription(e.target.value)}
               />
               <Button type="primary" onClick={onsubmit}>
                 Submit
               </Button>
-            </div>
+            </Row>
             <Spin spinning={tweetDataloading || loading} delay={500}>
-              {tweetData && <TweetCard data={tweetData} />}
+              {tweetData && tweetData.tweet.length > 0 ? (
+                <TweetCard data={tweetData} />
+              ) : (
+                <div>No Tweets</div>
+              )}
             </Spin>
           </Card>
         </div>

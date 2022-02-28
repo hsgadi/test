@@ -33,3 +33,16 @@ export const GET_ALL_TWEETS = gql`
     }
   }
 `;
+export const GET_ALL_FOLLOWERS = gql`
+  query followers {
+    followers {
+      follow_to
+      followed_by
+      id
+      user {
+        name
+        id
+      }
+    }
+  }
+`;
